@@ -6,10 +6,16 @@
 		"avatar": "bozo.png"
 	},
 	{
-		"id": "lula",
-		"name": "Luiz Inácio \"Lula\" da Silva",
-		"alias": "Molusco",
-		"avatar": "molusco.png"
+		"id": "gentili",
+		"name": "Danilo Gentili",
+		"alias": "deNoite",
+		"avatar": "denoite2.png"
+	},
+	{
+		"id": "doria",
+		"name": "Jorge Dória",
+		"alias": "goChina",
+		"avatar": "doria.png"
 	},
 	{
 		"id": "huck",
@@ -24,15 +30,15 @@
 		"avatar": "milk.png"
 	},
 	{
-		"id": "doria",
-		"name": "Jorge Dória",
-		"alias": "goChina",
-		"avatar": "doria.png"
+		"id": "lula",
+		"name": "Luiz Inácio \"Lula\" da Silva",
+		"alias": "Molusco",
+		"avatar": "molusco.png"
 	},
 	{
-		"id": "gentili",
-		"name": "Danilo Gentili",
-		"alias": "deNoite",
-		"avatar": "denoite2.png"
+		"id": "ciro",
+		"name": "Ciro Gomes",
+		"alias": "Tiro Gomes",
+		"avatar": "tiro.png"
 	}
 ]
