@@ -30,7 +30,7 @@ export function ElectionProvider({ children }) {
 				const result = {};
 				votes.forEach((vote) => {
 					const { id, alias, name, avatar } = vote.candidate;
-					if (user.uid === vote.id) {
+					if (user.uid === vote.user.uid) {
 						setCurrentCandidate({ id, alias, name, avatar });
 					}
 					if (!result[vote.candidate.id]) {

@@ -27,8 +27,8 @@ const VoteComponent = () => {
 			{user && <h3>You can {'vote'}</h3>}
 			<div className={styles.container}>
 				{candidates.map((cand) => (
-					<div key={cand.id} className={styles.candidate}>
-						<img width="100" src={cand.avatar} onClick={() => (user ? setVote(cand.id) : null)} />
+					<div key={cand.id} className={styles.candidate} onClick={() => (user ? setVote(cand.id) : null)}>
+						<img width="100" src={cand.avatar} />
 						<h3>{cand.alias}</h3>
 					</div>
 				))}
