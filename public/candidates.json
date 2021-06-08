@@ -1,0 +1,38 @@
+[
+	{
+		"id": "bolsonaro",
+		"name": "Jair Messias Bolsonaro",
+		"alias": "Bozo",
+		"avatar": "bozo.png"
+	},
+	{
+		"id": "lula",
+		"name": "Luiz Inácio \"Lula\" da Silva",
+		"alias": "Molusco",
+		"avatar": "molusco.png"
+	},
+	{
+		"id": "huck",
+		"name": "Luciano Huck",
+		"alias": "Hook",
+		"avatar": "hook.png"
+	},
+	{
+		"id": "leite",
+		"name": "Eduardo Leite",
+		"alias": "Milk",
+		"avatar": "milk.png"
+	},
+	{
+		"id": "doria",
+		"name": "Jorge Dória",
+		"alias": "goChina",
+		"avatar": "doria.png"
+	},
+	{
+		"id": "gentili",
+		"name": "Danilo Gentili",
+		"alias": "deNoite",
+		"avatar": "denoite2.png"
+	}
+]
