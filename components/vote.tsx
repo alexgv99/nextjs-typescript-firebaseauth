@@ -20,8 +20,8 @@ const VoteComponent = () => {
 					uid: user.uid,
 					name: user.displayName,
 					email: user.email,
-					date: new Date(),
 				},
+				date: new Date(),
 			});
 	};
 
