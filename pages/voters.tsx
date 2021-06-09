@@ -15,7 +15,6 @@ const timeFormatter = formatWithOptions({ locale: ptBR }, 'HH:mm');
 const VotersPage = () => {
 	const router = useRouter();
 	const { user, votes } = useContext(ElectionContext);
-	console.log('votes: ', votes);
 	const [votesByDate, setVotesByDate] = useState({});
 
 	useEffect(() => {

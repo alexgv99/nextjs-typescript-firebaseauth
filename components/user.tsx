@@ -6,6 +6,7 @@ import styles from '../styles/User.module.scss';
 import candidates from '../public/candidates.json';
 import { CandidateType } from '../types/CandidateType';
 import { ElectionContext } from '../contexts/election';
+import Logout from '../components/logout';
 
 const uiConfig: firebaseui.auth.Config = {
 	// Popup signin flow rather than redirect flow.
@@ -32,12 +33,21 @@ const UserComponent = () => {
 				</div>
 			)}
 			{user && (
-				<div className={styles.user}>
-					<img width="100" src={user.photoURL} />
-					<div>
-						<h3>Hello {user.name}</h3>
-						{currentCandidate && <i>Your currently vote is for {currentCandidate.name}</i>}
-						<div onClick={() => firebase.auth().signOut()}>logout</div>
+				<div className={styles.container}>
+					<div className={styles.background}>&nbsp;</div>
+					<div className={styles.user}>
+						<div className={styles.one}>
+							<img width="100" src={user.photoURL} />
+						</div>
+						<div className={styles.two}>
+							<h3>Hello {user.name}</h3>
+							{currentCandidate && (
+								<span>
+									Your currently vote is for <i className={styles.candidate}>{currentCandidate.name}</i>
+								</span>
+							)}
+							<Logout />
+						</div>
 					</div>
 				</div>
 			)}

@@ -32,7 +32,6 @@ export function ElectionProvider({ children }) {
 	const [electionContext, setElectionContext] = useState<ElectionContextType>(initialState);
 
 	useEffect(() => {
-		console.log('userAuth: ', userAuth);
 		if (userAuth) {
 			const findUser = async () => {
 				const userRef = db.current.collection('users').doc(userAuth.uid);
@@ -85,7 +84,6 @@ export function ElectionProvider({ children }) {
 	}, [userAuth]);
 
 	useEffect(() => {
-		console.log('[votesCollection, electionContext.user]: ', votesCollection, electionContext.user);
 		if (votesCollection && electionContext.user) {
 			const votes = [];
 			votesCollection.forEach((item) => {
@@ -102,15 +100,12 @@ export function ElectionProvider({ children }) {
 	}, [votesCollection, electionContext.user]);
 
 	useEffect(() => {
-		console.log('[electionContext.votes, electionContext.user]: ', electionContext.votes, electionContext.user);
 		if (electionContext.votes) {
-			console.log('votes: ', JSON.stringify(electionContext.votes, null, 2));
 			if (electionContext.user) {
 				const result = {};
-				const newContext = { ...electionContext };
+				const newContext = { ...electionContext, currentCandidate: null };
 				electionContext.votes.forEach((vote) => {
 					if (electionContext.user.id === vote.id) {
-						console.log('achei meu voto');
 						newContext.currentCandidate = vote.candidate;
 					}
 					if (!result[vote.candidate.id]) {

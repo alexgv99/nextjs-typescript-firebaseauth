@@ -1,9 +1,49 @@
+.container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	width: 500px;
+	height: 200px;
+	margin-top: 25px;
+}
+
+.background {
+	position: absolute;
+	background-color: black;
+	opacity: 30%;
+	width: 500px;
+	height: 200px;
+	z-index: 1000;
+	border-radius: 30px;
+}
+
 .user {
-	display: grid;
-	grid-template-columns: 100px 1fr;
+	z-index: 2000;
+	display: flex;
+	color: white;
+	background-color: transparent;
+	opacity: 100%;
+	position: relative;
+	align-items: center;
+	justify-content: center;
 	gap: 10px;
-	padding: 10px;
-	img {
-		border-radius: 50px;
+	.one {
+		img {
+			border-radius: 50px;
+			opacity: 100%;
+		}
+	}
+	.two {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: space-around;
+		align-items: center;
+		.candidate {
+			color: yellow;
+			text-emphasis: true;
+		}
 	}
 }
