@@ -1,6 +1,8 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
+
+import { omit } from 'lodash';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 import firebase from '../firebase/clientApp';
 import { CandidateType } from '../types/CandidateType';
@@ -14,45 +16,115 @@ type ElectionContextType = {
 	result: any;
 };
 
+const initialState: ElectionContextType = {
+	user: null,
+	votes: [],
+	currentCandidate: null,
+	result: null,
+};
+
 export const ElectionContext = createContext({} as ElectionContextType);
 
 export function ElectionProvider({ children }) {
-	const [votes, votesLoading, votesError] = useCollectionData(firebase.firestore().collection('votes'), {});
-	const [user, loading, error] = useAuthState(firebase.auth());
-	const [result, setResult] = useState(null);
-	const [currentCandidate, setCurrentCandidate] = useState<CandidateType>(null);
+	const db = useRef(firebase.firestore());
+	const [userAuth] = useAuthState(firebase.auth());
+	const [votesCollection] = useCollection(firebase.firestore().collection('votes'), {});
+	const [electionContext, setElectionContext] = useState<ElectionContextType>(initialState);
 
 	useEffect(() => {
-		if (votes) {
-			if (!user) {
-				setResult(null);
+		console.log('userAuth: ', userAuth);
+		if (userAuth) {
+			const findUser = async () => {
+				const userRef = db.current.collection('users').doc(userAuth.uid);
+				const userItem = await userRef.get();
+
+				if (userItem.exists) {
+					const user: UserType = userItem.data() as UserType;
+					user.id = userItem.id;
+					// and update because we have two new fields since start of the project
+					let update = false;
+					if (!user.photoURL) {
+						user.photoURL = userAuth.photoURL;
+						update = true;
+					}
+					if (!user.createdAt) {
+						user.createdAt = new Date();
+						update = true;
+					}
+					if (update) {
+						db.current
+							.collection('users')
+							.doc(userAuth.uid)
+							.set(omit(user, ['id']));
+					}
+					setElectionContext((old) => ({ ...old, user }));
+				} else {
+					const user: UserType = {
+						id: userAuth.uid,
+						name: userAuth.displayName,
+						email: userAuth.email,
+						photoURL: userAuth.photoURL,
+						createdAt: new Date(),
+					};
+					// save user
+					db.current
+						.collection('users')
+						.doc(userAuth.uid)
+						.set({ name: user.name, email: user.email, photoURL: user.photoURL, createdAt: user.createdAt });
+					setElectionContext((old) => ({ ...old, user }));
+				}
+			};
+			if (userAuth) {
+				findUser();
 			} else {
+				setElectionContext((old) => ({ ...old, user: null }));
+			}
+		} else {
+			setElectionContext((old) => ({ ...old, user: null }));
+		}
+	}, [userAuth]);
+
+	useEffect(() => {
+		console.log('[votesCollection, electionContext.user]: ', votesCollection, electionContext.user);
+		if (votesCollection && electionContext.user) {
+			const votes = [];
+			votesCollection.forEach((item) => {
+				const vote = item.data();
+				vote['id'] = item.id;
+				vote.date = vote.date ? new Date(vote.date.seconds * 1000) : null;
+				vote.user = electionContext.user;
+				votes.push(vote);
+			});
+			setElectionContext((old) => ({ ...old, votes }));
+		} else {
+			setElectionContext((old) => ({ ...old, votes: null }));
+		}
+	}, [votesCollection, electionContext.user]);
+
+	useEffect(() => {
+		console.log('[electionContext.votes, electionContext.user]: ', electionContext.votes, electionContext.user);
+		if (electionContext.votes) {
+			console.log('votes: ', JSON.stringify(electionContext.votes, null, 2));
+			if (electionContext.user) {
 				const result = {};
-				votes.forEach((vote) => {
-					const { id, alias, name, avatar } = vote.candidate;
-					if (user.uid === vote.user.uid) {
-						setCurrentCandidate({ id, alias, name, avatar });
+				const newContext = { ...electionContext };
+				electionContext.votes.forEach((vote) => {
+					if (electionContext.user.id === vote.id) {
+						console.log('achei meu voto');
+						newContext.currentCandidate = vote.candidate;
 					}
 					if (!result[vote.candidate.id]) {
 						result[vote.candidate.id] = 0;
 					}
 					result[vote.candidate.id] += 1;
 				});
-				setResult(result);
+				newContext.result = result;
+				setElectionContext(newContext);
+			} else {
+				setElectionContext((old) => ({ ...old, result: null, currentCandidate: null }));
 			}
 		}
-	}, [votes, user]);
+	}, [electionContext.votes, electionContext.user]);
 
-	return (
-		<ElectionContext.Provider
-			value={{
-				user,
-				votes: (votes || []).map((vote) => ({ id: vote.id, candidate: vote.candidate, user: vote.user })),
-				currentCandidate,
-				result,
-			}}
-		>
-			{children}
-		</ElectionContext.Provider>
-	);
+	return <ElectionContext.Provider value={electionContext}>{children}</ElectionContext.Provider>;
 }

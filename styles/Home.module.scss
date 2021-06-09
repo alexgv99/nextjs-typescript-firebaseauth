@@ -6,6 +6,10 @@
 	justify-content: center;
 	align-items: center;
 	/* height: 100vh; */
+
+	@media only screen and (max-width: 600px) {
+		align-items: flex-start;
+	}
 }
 
 .main {
@@ -36,4 +40,9 @@
 
 .title {
 	text-align: center;
+	text-align: center;
+	color: white;
+	font-weight: bolder;
+	margin-top: -50px;
+	margin-bottom: 25px;
 }

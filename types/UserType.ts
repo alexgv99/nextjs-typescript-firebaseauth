@@ -1,6 +1,8 @@
 export type UserType = {
-	uid: string;
-	displayName: string;
+	id: string;
+	name?: string;
 	email: string;
 	photoURL?: string;
+	admin?: boolean;
+	createdAt?: Date;
 };
