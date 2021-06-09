@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import firebase from '../firebase/clientApp';
 
-export default function Logout() {
+export default function LogoutButton() {
 	return (
 		<div className="flex" onClick={() => firebase.auth().signOut()}>
 			<div className="link">

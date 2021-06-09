@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Arrow from '../public/icons/arrow.svg';
 
-export function Back() {
+export function BackButton() {
 	return (
 		<Link href="/">
 			<a className="flex">

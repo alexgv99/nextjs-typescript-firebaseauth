@@ -4,7 +4,7 @@ import { formatWithOptions } from 'date-fns/fp';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/router';
 
-import { Back } from '../components/back';
+import { BackButton } from '../components/back';
 import ResultComponent from '../components/result';
 import { ElectionContext } from '../contexts/election';
 import styles from '../styles/Voters.module.scss';
@@ -46,7 +46,7 @@ const VotersPage = () => {
 			{user?.admin ? (
 				<>
 					<div className={styles.list}>
-						<Back />
+						<BackButton />
 						<table>
 							{Object.keys(votesByDate).map((key) => (
 								<Fragment key={key}>
@@ -77,7 +77,7 @@ const VotersPage = () => {
 			) : (
 				<>
 					<h1 className={styles.error}>You're not allowed here.</h1>
-					<Back />
+					<BackButton />
 				</>
 			)}
 		</div>

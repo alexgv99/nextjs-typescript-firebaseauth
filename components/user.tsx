@@ -6,7 +6,8 @@ import styles from '../styles/User.module.scss';
 import candidates from '../public/candidates.json';
 import { CandidateType } from '../types/CandidateType';
 import { ElectionContext } from '../contexts/election';
-import Logout from '../components/logout';
+import LogoutButton from '../components/logout';
+import VotersButton from './votersButton';
 
 const uiConfig: firebaseui.auth.Config = {
 	// Popup signin flow rather than redirect flow.
@@ -46,7 +47,10 @@ const UserComponent = () => {
 									Your currently vote is for <i className={styles.candidate}>{currentCandidate.name}</i>
 								</span>
 							)}
-							<Logout />
+							<div className={styles.toolbar}>
+								<LogoutButton />
+								<VotersButton />
+							</div>
 						</div>
 					</div>
 				</div>
