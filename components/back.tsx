@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Arrow from '../public/icons/arrow.svg';
+import { ReactComponent as Arrow } from '../public/icons/arrow.svg';
 
 export function BackButton() {
 	return (
