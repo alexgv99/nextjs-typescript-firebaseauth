@@ -84,16 +84,43 @@ export function ElectionProvider({ children }) {
 	}, [userAuth]);
 
 	useEffect(() => {
-		if (votesCollection && electionContext.user) {
+		const findUser = async (id: string) => {
+			const userRef = db.current.collection('users').doc(id);
+			const userItem = await userRef.get();
+			if (userItem.exists) {
+				const user: UserType = userItem.data() as UserType;
+				user.id = userItem.id;
+				return user;
+			}
+			return null;
+		};
+		const retrieveVotes = async () => {
 			const votes = [];
+			const usersIds = [];
+			const users: UserType[] = [];
+
+			votesCollection.forEach((item) => {
+				usersIds.push(item.id);
+			});
+
+			for (let id of usersIds) {
+				const user = await findUser(id);
+				users.push(user);
+			}
+
 			votesCollection.forEach((item) => {
 				const vote = item.data();
 				vote['id'] = item.id;
 				vote.date = vote.date ? new Date(vote.date.seconds * 1000) : null;
-				vote.user = electionContext.user;
+				vote.user = users.find((u) => u.id === item.id);
 				votes.push(vote);
 			});
-			setElectionContext((old) => ({ ...old, votes }));
+
+			setElectionContext((old) => ({ ...old, votes: votes.sort((v1, v2) => (v1.date > v2.date ? 1 : -1)) }));
+		};
+
+		if (votesCollection && electionContext.user) {
+			retrieveVotes();
 		} else {
 			setElectionContext((old) => ({ ...old, votes: null }));
 		}
