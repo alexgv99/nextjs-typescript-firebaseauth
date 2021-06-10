@@ -44,7 +44,7 @@ const UserComponent = () => {
 							<h3>Hello {user.name}</h3>
 							{currentCandidate && (
 								<span>
-									Your currently vote is for <i className={styles.candidate}>{currentCandidate.name}</i>
+									Your current vote is for <i className={styles.candidate}>{currentCandidate.name}</i>
 								</span>
 							)}
 							<div className={styles.toolbar}>
