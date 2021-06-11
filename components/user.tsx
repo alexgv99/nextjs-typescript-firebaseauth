@@ -1,38 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import firebase from '../firebase/clientApp';
-import styles from '../styles/User.module.scss';
-import candidates from '../public/candidates.json';
-import { CandidateType } from '../types/CandidateType';
-import { ElectionContext } from '../contexts/election';
-import LogoutButton from '../components/logout';
-import VotersButton from './votersButton';
+import React from 'react';
 
-const uiConfig: firebaseui.auth.Config = {
-	// Popup signin flow rather than redirect flow.
-	signInFlow: 'popup',
-	// signInSuccessUrl: '/',
-	signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.GithubAuthProvider.PROVIDER_ID],
-	// callbacks: {
-	// 	signInSuccessWithAuthResult: (authResult) => {
-	// 		console.log('authResult: ', authResult);
-	// 		return true;
-	// 	},
-	// },
+import LoginButton from 'components/loginButton';
+import LogoutButton from 'components/logout';
+import VotersButton from 'components/votersButton';
+
+import styles from 'styles/User.module.scss';
+
+import { CandidateType } from 'types/CandidateType';
+import { UserType } from 'types/UserType';
+
+type UserComponentPropsType = {
+	user: UserType;
+	currentCandidate: CandidateType;
 };
 
-const UserComponent = () => {
-	const { user, currentCandidate } = useContext(ElectionContext);
+export default function UserComponent({ user, currentCandidate }: UserComponentPropsType) {
 	return (
 		<>
-			{!user && (
-				<div>
-					<h1>Application login</h1>
-					<p>Please, login:</p>
-					<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-				</div>
-			)}
+			{!user && <LoginButton />}
 			{user && (
 				<div className={styles.container}>
 					<div className={styles.background}>&nbsp;</div>
@@ -49,7 +34,7 @@ const UserComponent = () => {
 							)}
 							<div className={styles.toolbar}>
 								<LogoutButton />
-								<VotersButton />
+								{!!user.admin && <VotersButton />}
 							</div>
 						</div>
 					</div>
@@ -57,6 +42,4 @@ const UserComponent = () => {
 			)}
 		</>
 	);
-};
-
-export default UserComponent;
+}

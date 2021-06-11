@@ -4,10 +4,10 @@ import { omit } from 'lodash';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
-import firebase from '../firebase/clientApp';
-import { CandidateType } from '../types/CandidateType';
-import { UserType } from '../types/UserType';
-import { VoteType } from '../types/VoteType';
+import { firebaseClient } from 'firebase/client';
+import { CandidateType } from 'types/CandidateType';
+import { UserType } from 'types/UserType';
+import { VoteType } from 'types/VoteType';
 
 type ElectionContextType = {
 	user: UserType;
@@ -26,9 +26,9 @@ const initialState: ElectionContextType = {
 export const ElectionContext = createContext({} as ElectionContextType);
 
 export function ElectionProvider({ children }) {
-	const db = useRef(firebase.firestore());
-	const [userAuth] = useAuthState(firebase.auth());
-	const [votesCollection] = useCollection(firebase.firestore().collection('votes'), {});
+	const db = useRef(firebaseClient.firestore());
+	const [userAuth] = useAuthState(firebaseClient.auth());
+	const [votesCollection] = useCollection(firebaseClient.firestore().collection('votes'), {});
 	const [electionContext, setElectionContext] = useState<ElectionContextType>(initialState);
 
 	useEffect(() => {

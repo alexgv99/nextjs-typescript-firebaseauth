@@ -11,6 +11,7 @@
 			"./node_modules/@types"
 		],
 		"allowJs": true,
+		"baseUrl": ".",
 		"skipLibCheck": true,
 		"strict": false,
 		"forceConsistentCasingInFileNames": true,
@@ -29,5 +30,5 @@
 	],
 	"exclude": [
 		"node_modules"
-	]
+	],
 }

@@ -1,11 +1,11 @@
-import { ElectionProvider } from '../contexts/election';
-import '../styles/globals.css';
+import { AuthProvider } from 'contexts/auth';
+import 'styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
 	return (
-		<ElectionProvider>
+		<AuthProvider>
 			<Component {...pageProps} />
-		</ElectionProvider>
+		</AuthProvider>
 	);
 }
 

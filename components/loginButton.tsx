@@ -1,13 +1,13 @@
-import Link from 'next/link';
 import Image from 'next/image';
-import { ReactComponent as Arrow } from '../public/icons/arrow.svg';
+import Link from 'next/link';
 
-export function BackButton() {
+export default function LoginButton() {
 	return (
-		<Link href="/">
+		<Link href="/login">
 			<a className="flex">
 				<div className="link">
-					<Arrow width={20} height={20} /> Back
+					<Image src="/voters.png" width={30} height={30} />
+					Please, login to vote
 				</div>
 				<style jsx>{`
 					.flex {
@@ -16,11 +16,13 @@ export function BackButton() {
 					}
 					.link {
 						display: flex;
+						gap: 10px;
 						flex-direction: row;
 						flex-wrap: nowrap;
-						padding: 10px;
-						border: 1px solid black;
+						padding: 10px 25px;
+						border: 1px solid lightgrey;
 						border-radius: 15px;
+						align-items: center;
 					}
 				`}</style>
 			</a>

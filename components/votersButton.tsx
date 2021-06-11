@@ -1,13 +1,8 @@
 import Image from 'next/image';
-import { useContext } from 'react';
 import Link from 'next/link';
 
-import { ElectionContext } from '../contexts/election';
-import firebase from '../firebase/clientApp';
-
 export default function VotersButton() {
-	const { user } = useContext(ElectionContext);
-	return user.admin ? (
+	return (
 		<Link href="/voters">
 			<a className="flex">
 				<div className="link">
@@ -31,5 +26,5 @@ export default function VotersButton() {
 				`}</style>
 			</a>
 		</Link>
-	) : null;
+	);
 }

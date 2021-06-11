@@ -1,11 +1,17 @@
-import React, { cloneElement, useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
 import { Chart } from 'react-google-charts';
+import { CandidateType } from 'types/CandidateType';
+
 import { ElectionContext } from '../contexts/election';
 import candidates from '../public/candidates.json';
 import styles from '../styles/Result.module.scss';
 
-const ResultComponent = () => {
-	const { result, currentCandidate } = useContext(ElectionContext);
+type ResultComponentPropsType = {
+	result: any;
+};
+
+const ResultComponent = ({ result }: ResultComponentPropsType) => {
 	const total = useRef(0);
 	const [data, setData] = useState([]);
 
@@ -23,7 +29,7 @@ const ResultComponent = () => {
 		}
 	}, [result]);
 
-	return total.current > 0 && currentCandidate ? (
+	return total.current > 0 ? (
 		<div className={styles.container}>
 			<Chart
 				width={'500px'}
@@ -38,7 +44,7 @@ const ResultComponent = () => {
 					pieSliceText: 'value',
 				}}
 				rootProps={{ 'data-testid': '2' }}
-			/>{' '}
+			/>
 		</div>
 	) : null;
 };

@@ -11,8 +11,9 @@ const clientCredentials = {
 	appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-if (!firebase.apps.length) {
+if (typeof window !== 'undefined' && !firebase.apps.length) {
 	firebase.initializeApp(clientCredentials);
+	firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 }
 
-export default firebase;
+export { firebase as firebaseClient };
