@@ -17,17 +17,22 @@ type VoteComponentPropsType = {
 export default function VoteComponent({ selectedCandidateId }: VoteComponentPropsType) {
 	const [errorMessage, setErrorMessage] = useState(null);
 	const { user } = useAuth();
+	const [currentCandidateId, setCurrentCandidateId] = useState(selectedCandidateId);
 
-	const db = useRef(firebaseClient.firestore());
-
-	const saveVote = (candidate: string) => {
-		db.current
-			.collection('votes')
-			.doc(user.uid)
-			.set({
-				candidate: candidates.find((cand) => cand.id === candidate),
+	const saveVote = async (candidateId: string) => {
+		const db = firebaseClient.firestore();
+		const candidate = candidates.find((cand) => cand.id === candidateId);
+		console.log('antes de votar no ', candidateId);
+		try {
+			await db.collection('votes').doc(user.uid).set({
+				candidate,
 				date: new Date(),
 			});
+		} catch (err) {
+			console.log('err: ', err);
+		}
+		console.log('depois de votar no ', candidateId);
+		setCurrentCandidateId(candidateId);
 	};
 
 	const vote = (candId: string) => {
@@ -50,7 +55,7 @@ export default function VoteComponent({ selectedCandidateId }: VoteComponentProp
 				{candidates.map((cand) => (
 					<div
 						key={cand.id}
-						className={selectedCandidateId === cand.id ? styles.selectedCandidate : styles.candidate}
+						className={currentCandidateId === cand.id ? styles.selectedCandidate : styles.candidate}
 						onClick={() => (user ? vote(cand.id) : cantVoteSignedOut())}
 					>
 						<img width="100" src={cand.avatar} />

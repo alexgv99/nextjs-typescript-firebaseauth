@@ -4,5 +4,5 @@ export type UserType = {
 	email: string;
 	photoURL?: string;
 	admin?: boolean;
-	createdAt?: Date;
+	createdAt?: Date | string;
 };

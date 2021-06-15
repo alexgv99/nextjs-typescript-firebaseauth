@@ -38,7 +38,7 @@ function Home({ user, currentCandidate, result }: HomePropsType) {
 			<main className={styles.main}>
 				<div className={styles.title}>Brazilian election</div>
 
-				<VoteComponent selectedCandidateId={currentCandidate.id} />
+				<VoteComponent selectedCandidateId={currentCandidate?.id} />
 
 				{!!currentCandidate && <ResultComponent result={result} />}
 
@@ -49,9 +49,13 @@ function Home({ user, currentCandidate, result }: HomePropsType) {
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+	let props = {
+		user: null,
+		currentCandidate: null,
+		result: null,
+	};
 	try {
 		const cookies = nookies.get(ctx);
-
 		// the user is authenticated! (authentication, controled by firebase.auth)
 		const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
 
@@ -59,32 +63,29 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 		const user: UserType = await obtainUser(uid);
 
-		// only admin users can access this page (authorization, controled by your application)
-		if (!user.admin) {
-			throw new Error('User is not admin');
-		}
-
-		const currentCandidate = await obtainCurrentCandidate(uid);
+		const currentCandidate = (await obtainCurrentCandidate(uid)) || null;
 
 		const result = await obtainResult();
 
-		return {
-			props: { user, currentCandidate, result },
-		};
+		props = { user, currentCandidate, result };
+
+		return { props };
 	} catch (err) {
+		console.error('err', err.message);
 		// either the `token` cookie didn't exist
 		// or token verification failed
 		// or user is not admin
 		// either way: redirect to the home page
-		ctx.res.writeHead(302, { Location: '/' });
-		ctx.res.end();
+		// ctx.res.writeHead(302, { Location: '/' });
+		// ctx.res.end();
 
 		// `as never` prevents inference issues
 		// with InferGetServerSidePropsType.
 		// The props returned here don't matter because we've
 		// already redirected the user.
-		return { props: {} as never };
+		// return { props: {} as never };
 	}
+	return { props };
 };
 
 export default Home;

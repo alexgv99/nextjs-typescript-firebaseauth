@@ -11,9 +11,15 @@ const obtainUser = async (id: string): Promise<UserType> => {
 	if (!userSnapshot.exists) {
 		throw new Error(`User ${id} doesn't exist`);
 	}
-	const userData = userSnapshot as unknown;
-	const user = userData as UserType;
-	user.id = userSnapshot.id;
+
+	const userData = userSnapshot.data() as unknown;
+	let user = userData as UserType;
+	user.createdAt = user.createdAt ? new Date(user.createdAt['seconds'] * 1000).toString() : null;
+	try {
+		user.id = userSnapshot.id;
+	} catch (err) {
+		console.error('deu merda', err);
+	}
 	return user;
 };
 
@@ -21,10 +27,12 @@ const obtainCurrentCandidate = async (id: string): Promise<CandidateType> => {
 	let currentCandidate: CandidateType = null;
 	const db = firebaseAdmin.firestore();
 	const voteRef = db.collection('votes').doc(id);
-	const voteData = await voteRef.get();
+	const voteSnapshotDoc = await voteRef.get();
 
-	if (voteData.exists) {
-		currentCandidate = (voteData as unknown as VoteType).candidate;
+	if (voteSnapshotDoc.exists) {
+		const voteData = voteSnapshotDoc.data() as VoteType;
+		voteData.id = voteSnapshotDoc.id;
+		currentCandidate = voteData.candidate;
 	}
 
 	return currentCandidate;
